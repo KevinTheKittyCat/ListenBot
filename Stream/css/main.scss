@@ -1,0 +1,61 @@
+.body {
+    margin:0px;
+}
+.peopleContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.player {
+    position: absolute;
+    transition: filter 0.5s ease-in-out;
+    filter:grayscale(50%) brightness(20%);
+    //opacity: 0%;
+    height: 300px;
+    -webkit-user-drag: none;
+    user-select: none;
+    //padding-left: 250px;
+    //margin-top: 450px;
+    transition: animation 0.5s ease-in-out;
+}
+
+.player.active {
+    filter:grayscale(0%) drop-shadow(4px 4px 8px rgb(255, 255, 255)) brightness(100%);
+    opacity: 100%;
+    animation:speaking 2s alternate-reverse infinite ease-in-out, pling 0.5s ease-in-out;
+}
+
+@keyframes speaking {
+    from {
+        filter:grayscale(0%) drop-shadow(4px 4px 4px rgb(255, 255, 255)) brightness(100%) ease-in-out;
+    }
+    to {
+        filter:grayscale(0%) drop-shadow(10px 10px 10px rgb(255, 255, 255)) brightness(100%) ease-in-out;
+    }
+}
+/*
+@keyframes pling {
+    0% {
+        transform: translate(0px, 0px);
+    }
+    50% {
+        transform: translate(-3px, -10px);
+    }
+    100% {
+        transform: translate(0px, 0px);
+    }
+}
+/*
+#k150705291497963521 {
+    background-color: aqua;
+    color:aqua;
+}
+/*
+.dragon {
+    filter:grayscale(100%)
+}
+
+.dragon.active {
+    filter:grayscale(70%)
+}
+*/

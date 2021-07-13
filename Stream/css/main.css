@@ -1,0 +1,90 @@
+.body {
+  margin: 0px;
+}
+
+.peopleContainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.player {
+  position: absolute;
+  -webkit-transition: -webkit-filter 0.5s ease-in-out;
+  transition: -webkit-filter 0.5s ease-in-out;
+  transition: filter 0.5s ease-in-out;
+  transition: filter 0.5s ease-in-out, -webkit-filter 0.5s ease-in-out;
+  -webkit-filter: grayscale(50%) brightness(20%);
+          filter: grayscale(50%) brightness(20%);
+  height: 300px;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  -webkit-transition: -webkit-animation 0.5s ease-in-out;
+  transition: -webkit-animation 0.5s ease-in-out;
+  transition: animation 0.5s ease-in-out;
+  transition: animation 0.5s ease-in-out, -webkit-animation 0.5s ease-in-out;
+}
+
+.player.active {
+  -webkit-filter: grayscale(0%) drop-shadow(4px 4px 8px white) brightness(100%);
+          filter: grayscale(0%) drop-shadow(4px 4px 8px white) brightness(100%);
+  opacity: 100%;
+  animation: speaking 2s alternate-reverse infinite ease-in-out, pling 0.5s ease-in-out;
+}
+
+@-webkit-keyframes speaking {
+  from {
+    -webkit-filter: grayscale(0%) drop-shadow(4px 4px 4px white) brightness(100%) ease-in-out;
+            filter: grayscale(0%) drop-shadow(4px 4px 4px white) brightness(100%) ease-in-out;
+  }
+  to {
+    -webkit-filter: grayscale(0%) drop-shadow(10px 10px 10px white) brightness(100%) ease-in-out;
+            filter: grayscale(0%) drop-shadow(10px 10px 10px white) brightness(100%) ease-in-out;
+  }
+}
+
+@keyframes speaking {
+  from {
+    -webkit-filter: grayscale(0%) drop-shadow(4px 4px 4px white) brightness(100%) ease-in-out;
+            filter: grayscale(0%) drop-shadow(4px 4px 4px white) brightness(100%) ease-in-out;
+  }
+  to {
+    -webkit-filter: grayscale(0%) drop-shadow(10px 10px 10px white) brightness(100%) ease-in-out;
+            filter: grayscale(0%) drop-shadow(10px 10px 10px white) brightness(100%) ease-in-out;
+  }
+}
+
+/*
+@keyframes pling {
+    0% {
+        transform: translate(0px, 0px);
+    }
+    50% {
+        transform: translate(-3px, -10px);
+    }
+    100% {
+        transform: translate(0px, 0px);
+    }
+}
+/*
+#k150705291497963521 {
+    background-color: aqua;
+    color:aqua;
+}
+/*
+.dragon {
+    filter:grayscale(100%)
+}
+
+.dragon.active {
+    filter:grayscale(70%)
+}
+*/
+/*# sourceMappingURL=main.css.map */
