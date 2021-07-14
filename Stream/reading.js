@@ -36,7 +36,36 @@ function check() {
                     // Retrieve
                     console.log(localpos)
                     console.log(container.children)
-                    container.children[newUser.id].style.transform = localpos
+
+                    if (localpos) {
+                        /*
+                        let afterSplit = localpos
+                        let split1 = afterSplit.split(",")
+                        /*
+                        console.log(split1)
+                        let split2 = split1[1].split(")")
+                        console.log(split2)
+                        let split3 = split2[0].split(",")
+                        console.log(split3)
+
+                        let imageX = split3[0]
+                        let imageY = split3[1]
+                        */
+                        let posSplitX = localpos.split(",")
+
+                        let imageX = posSplitX[0] + "px"
+                        let imageY = posSplitX[1] + "px"
+                        console.log(localpos)
+                        console.log(imageX)
+                        console.log(imageY)
+                        
+                        //console.log(container.children[newUser.id].style.left)
+                        container.children[newUser.id].style.left = imageX
+                        container.children[newUser.id].style.top = imageY
+                        console.log(container.children[newUser.id].style.left)
+                        console.log(container.children[newUser.id].style.top)
+                    }
+                    //container.children[newUser.id].style.transform = localpos
                 }
             }
             //let userDivNew = document.querySelector(`#k${element.identity}`);

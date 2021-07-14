@@ -51,7 +51,12 @@ var container = document.querySelector("#body");
 
       //Write Json saving Image positions
       for (let i = 0; i < container.children.length; i++) {
-        let ImagePosition = container.children[i].style.transform
+        let ImagePosition = [container.children[i].getBoundingClientRect().left, container.children[i].getBoundingClientRect().top]
+        console.log(container.children[i].getBoundingClientRect().left)
+        console.log(container.children[i].getBoundingClientRect().top)
+
+
+        console.log("Saving " + ImagePosition)
         /*
         console.log(ImagePosition)
         if (ImagePosition != 0 ) {
@@ -86,7 +91,6 @@ var container = document.querySelector("#body");
     }
 
     function drag(e) {
-      console.log(e)
       if (active) {
         if (e.type === "touchmove") {
           e.preventDefault();
