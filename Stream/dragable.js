@@ -1,4 +1,4 @@
-var container = document.querySelector("#peopleContainer");
+var container = document.querySelector("#body");
     var activeItem = null;
 
     var active = false;
@@ -8,10 +8,11 @@ var container = document.querySelector("#peopleContainer");
     container.addEventListener("touchmove", drag, false);
 
     container.addEventListener("mousedown", dragStart, false);
-    container.addEventListener("mouseup", dragEnd, false);
+    container.addEventListener("mouseup", dragEnd);
     container.addEventListener("mousemove", drag, false);
 
     function dragStart(e) {
+      console.log("new input")
 
       if (e.target !== e.currentTarget) {
         active = true;
@@ -41,6 +42,8 @@ var container = document.querySelector("#peopleContainer");
     }
 
     function dragEnd(e) {
+      console.log("released")
+      console.log(e)
       if (activeItem !== null) {
         activeItem.initialX = activeItem.currentX;
         activeItem.initialY = activeItem.currentY;
@@ -71,7 +74,8 @@ var container = document.querySelector("#peopleContainer");
         //x first, then Y
         }
         */
-        setCookie(container.children[i].className, ImagePosition, 365)
+        localStorage.setItem(container.children[i].className, ImagePosition);
+        //setCookie(container.children[i].className, ImagePosition, 365)
       }
 
       
@@ -82,6 +86,7 @@ var container = document.querySelector("#peopleContainer");
     }
 
     function drag(e) {
+      console.log(e)
       if (active) {
         if (e.type === "touchmove") {
           e.preventDefault();
@@ -89,13 +94,14 @@ var container = document.querySelector("#peopleContainer");
           activeItem.currentX = e.touches[0].clientX - activeItem.initialX;
           activeItem.currentY = e.touches[0].clientY - activeItem.initialY;
         } else {
-          activeItem.currentX = e.clientX - activeItem.initialX;
-          activeItem.currentY = e.clientY - activeItem.initialY;
+          
+          activeItem.currentX = e.clientX - activeItem.initialX //e.clientX - (activeItem.initialX/2);
+          activeItem.currentY = e.clientY - activeItem.initialY //e.clientY - activeItem.initialY;
         }
-
+        
         activeItem.xOffset = activeItem.currentX;
         activeItem.yOffset = activeItem.currentY;
-
+        
         setTranslate(activeItem.currentX, activeItem.currentY, activeItem);
       }
     }
@@ -127,7 +133,7 @@ document.cookie = `${ImagePosition}; expires=Thu, 18 Dec 2013 12:00:00 UTC`;
       });
       */
 }
-
+/*
 function setCookie(name,value,days) {
   var expires = "";
   if (days) {
@@ -150,3 +156,4 @@ function getCookie(name) {
 function eraseCookie(name) {   
   document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
+*/

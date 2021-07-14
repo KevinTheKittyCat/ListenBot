@@ -9,18 +9,30 @@
     <title>Document</title>
 </head>
 
-<body>
+<body id="body">
     <div class="peopleContainer" id="peopleContainer">
-        <img class="player k269908629795241994" src="269908629795241994.png" id="k150705291497963521"></img>
-        <img class="player k190170230599712768" src="190170230599712768.png"></img>
-        <img class="player k150705291497963521" id="poh" src="150705291497963521.png"></img>
-
 
 
     </div>
     <script>
+        //<img class="player k269908629795241994" src="269908629795241994.png" id="k150705291497963521"></img>
+        //<img class="player k190170230599712768" src="190170230599712768.png"></img>
+        //<img class="player k150705291497963521" id="poh" src="150705291497963521.png"></img>
+        /*
+        var container = document.querySelector("#peopleContainer");
+        for (let i = 0; i < container.children.length; i++) {
+        console.log(localStorage.getItem("lastname"))
+        //localStorage.setItem(container.children[i].className, container.children[i].style.transform);
+        console.log(container.children[i].style.transform)
+        let localpos = localStorage.getItem(container.children[i].className)
+        // Retrieve
+        console.log(localpos)
+        container.children[i].style.transform = localpos
+        }
+        */
+        /*
         caching()
-        
+
         async function caching() {
             const newCache = await caches.open('new-cache');
             const options = {
@@ -39,10 +51,6 @@
             newCache.put('https://pets/cats.json');
         }
 
-
-
-
-        var container = document.querySelector("#peopleContainer");
         for (let i = 0; i < container.children.length; i++) {
             let ImagePosition = container.children[i].style.transform
             let lastPosition = getCookie(container.children[i].className)
@@ -61,6 +69,7 @@
             }
             return null;
         }
+        */
     </script>
     <script src="jquery-3.6.0.js"></script>
     <script src="require.js"></script>

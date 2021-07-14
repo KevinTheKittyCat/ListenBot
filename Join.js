@@ -36,7 +36,7 @@ module.exports = async function (msg, tokens, client) {
     details.push(new User(userInChannel.id, 0));  
     })
     console.log(details)
-    await fs.writeFile('./Stream/test.json', JSON.stringify(details), function (err) {
+    await fs.writeFile('./Stream/Users.json', JSON.stringify(details), function (err) {
         if (err) throw err;
 
         console.log('Replaced!');
@@ -47,7 +47,7 @@ module.exports = async function (msg, tokens, client) {
         .then(connection => {
             console.log('Connected!')
             connection.on('speaking', async (user, speakingState) => {
-                let json = require('./Stream/test.json');
+                let json = require('./Stream/Users.json');
                 console.log(json)
                     json.forEach(jsonUser => {
 
@@ -86,7 +86,7 @@ module.exports = async function (msg, tokens, client) {
 
                         
 
-                        await fs.writeFile('Stream/test.json', JSON.stringify(json), function (err) {
+                        await fs.writeFile('Stream/Users.json', JSON.stringify(json), function (err) {
                             if (err) throw err;
                     
                             console.log('Replaced!');
