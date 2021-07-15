@@ -3,130 +3,84 @@ var container = document.querySelector("#peopleContainer");
 
 setInterval(check, 100)
 
-
+// Check if the JSON has changed, reading all the information and applying the information onto
+// each User/Image. If there is a new element, it'll check the cache if the element has a position
+// and place it accordingly.
 function check() {
-    //console.log(container.children[2])
-    $.getJSON("./Users.json", function (json) {
-        json.forEach(element => {
-            //console.log(container.children)
-            //document.body.onload = addElement;
-
-            let doesUserExist = document.querySelector(`#k${element.identity}`);
-            if (!doesUserExist) {
-
-                console.log(doesUserExist + " did not exist")
-                addElement()
-                function addElement() {
-                    // create a new div element
-                    const newUser = document.createElement("img");
-                    newUser.className = `player k${element.identity}`;
-                    newUser.src = `${element.identity}/default.png`
-                    newUser.id = `k${element.identity}`
-                    // and give it some content
-                    //const newContent = document.createTextNode("Hi there and greetings!");
-
-                    // add the text node to the newly created div
-                    //newDiv.appendChild(newContent);
-
-                    // add the newly created element and its content into the DOM
-                    //const currentDiv = document.getElementById("peopleContainer");
-                    //document.body.insertBefore(newDiv, currentDiv);
-                    container.appendChild(newUser)
-                    let localpos = localStorage.getItem(newUser.className)
-                    // Retrieve
-                    console.log(localpos)
-                    console.log(container.children)
-
-                    if (localpos) {
-                        /*
-                        let afterSplit = localpos
-                        let split1 = afterSplit.split(",")
-                        /*
-                        console.log(split1)
-                        let split2 = split1[1].split(")")
-                        console.log(split2)
-                        let split3 = split2[0].split(",")
-                        console.log(split3)
-
-                        let imageX = split3[0]
-                        let imageY = split3[1]
-                        */
-                        let posSplitX = localpos.split(",")
-
-                        let imageX = posSplitX[0] + "px"
-                        let imageY = posSplitX[1] + "px"
-                        console.log(localpos)
-                        console.log(imageX)
-                        console.log(imageY)
-                        
-                        //console.log(container.children[newUser.id].style.left)
-                        container.children[newUser.id].style.left = imageX
-                        container.children[newUser.id].style.top = imageY
-                        console.log(container.children[newUser.id].style.left)
-                        console.log(container.children[newUser.id].style.top)
-                    }
-                    //container.children[newUser.id].style.transform = localpos
-                }
-            }
-            //let userDivNew = document.querySelector(`#k${element.identity}`);
-
-            //console.log(userDivNew)
-            /*if (document.getElementsByClassName(`${element.identity}`)) {
-                console.log
-            }
+    // Get the JSON with all the users.
+    $.getJSON("./Stream/Users.json", function (json) {
+        json.forEach(user => {
+            // Check if the User exists
+            let doesUserExist = document.querySelector(`#k${user.identity}`);
             
-            if ($('#poh').length > 0) {
-                // Exists.
+            if (!doesUserExist) {
+                console.log(doesUserExist + " did not exist")
+                addElement(user)
+            }
 
-              }
-              */
-            /*
-          if (document.body.contains(element.identity)) {
-              console.log("Found person")
-          }
-          */
-            //console.log()
-            //console.log(json["150705291497963521"]); // this will show the info it in firebug console
-            //console.log(element)
-            let isSpeaking = element.speaking
-            //console.log(element.speaking)
-            //console.log(element)
-            const slider = document.querySelector(`.k${element.identity}`);
-            //console.log(slider)
-            //console.log($('.active'))
-            //console.log(json["150705291497963521"]); // this will show the info it in firebug console
-            //console.log(slider)
-            //console.log(slider.classList)
+            let userIsSpeaking = user.speaking
 
-            if (isSpeaking) {
-                was = true
-                //console.log("turning on") ${element.images[]}
-                /*
-                if (slider.attributes.src.nodeValue == `${element.identity}2.png`) {
-                    slider.setAttribute("src", `${element.identity}3.png`)
+            const userImage = document.querySelector(`.k${user.identity}`);
+
+            // Get the Image List from the JSON file.
+            let onlyImages = user.images.filter(image => image !== 'default.png');
+            // Randomly Toggle Between Images
+            let randomNumberForImages = Math.floor(Math.random() * onlyImages.length) + 1
+            console.log(onlyImages[1])
+            if (userIsSpeaking) {
+
+                if (onlyImages[0] === "NotSelected.png") {
+                    userImage.setAttribute("src", `./Stream/img/NotSelected.png`)
                 } else {
-                    slider.setAttribute("src", `${element.identity}2.png`)
+
+                // Set the Image in the HTML from The Random Image selected
+                userImage.setAttribute("src", `./UserImages/${user.name}/${onlyImages[randomNumberForImages - 1]}`)
                 }
-                */
-                let onlyImages = element.images.filter(image => image !== 'default.png');
-                let randomNumberForImages = Math.floor(Math.random() * onlyImages.length) + 1
-                console.log(onlyImages)
-                console.log(randomNumberForImages)
-                console.log(onlyImages[randomNumberForImages - 1])
+                userImage.classList.add('active');
 
-                slider.setAttribute("src", `./${element.identity}/${onlyImages[randomNumberForImages - 1]}`)
+            } else if (!userIsSpeaking && userImage.classList[2] == "active") {
+                if (onlyImages[1] === "NotSelectedDF.png") {
+                    userImage.setAttribute("src", `./Stream/img/NotSelectedDF.png`)
+                } else {
+                    
+                // If the User isn't speaking, return to default Image.
+                userImage.setAttribute("src", `./UserImages/${user.name}/default.png`)
+                userImage.classList.remove('active');
+                }
 
-                slider.classList.add('active');
-                //document.getElementsByClassName(container.children[i].className + " active")
-
-            } else if (!isSpeaking && slider.classList[2] == "active") {
-                slider.setAttribute("src", `./${element.identity}/default.png`)
-                was = false
-                //console.log("turning off")
-                slider.classList.remove('active');
             } else {
-                //console.log("This user does not exist")
+
             }
         })
     });
+}
+
+function addElement(user) {
+    // Create a new img User Element
+    const newUser = document.createElement("img");
+    newUser.className = `player k${user.identity}`;
+    newUser.src = `./UserImages/${user.name}/default.png` //|| `./Stream/img/NotSelectedDF.png`
+    newUser.id = `k${user.identity}`
+
+    // Make it under the People-Container. All users needs to be under it to be moved.
+    container.appendChild(newUser)
+
+    let localpos = localStorage.getItem(newUser.className)
+    // If the User/Image has a position Saved, return to that position.
+    if (localpos) {
+        // The Local Position is 2 numbers, split by a ",".
+        // Example: 400,231
+        // Example: X,Y
+        let posSplitX = localpos.split(",")
+
+        // Get the previous X and Y, add px for CSS.
+        let imageX = posSplitX[0] + "px"
+        let imageY = posSplitX[1] + "px"
+
+        // Set the X and Y for the HTML Element.
+        container.children[newUser.id].style.left = imageX
+        container.children[newUser.id].style.top = imageY
+
+    }
+
 }

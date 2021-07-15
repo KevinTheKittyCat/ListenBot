@@ -3,10 +3,6 @@ const Discord = require('discord.js');
 require('discord-reply');
 require('dotenv').config();
 
-function Start() {
-    console.log("Hello");
-}
-
 //Log In to Discord {
 const client = new Discord.Client();
 client.login(process.env.TOKEN);
@@ -27,19 +23,12 @@ client.on('guildCreate', guild => {
 });
 
 var discordServerID = 0
+
+//If a message is sent, it checks if it is joincall, if it is, joins the channel.
 const commandHandler = require("./Join");
 client.on("message", commandHandler);
 
-client.on("message", message => {
-    //console.log(message)
-    if (message.content == "!joincall") {
-        discordServerID = message.member.voice.channel.id
-        console.log("Message: " + discordServerID)
-
-    }
-})
-
-
+//If a new Member joins -> Add member to Join.js
 client.on('voiceStateUpdate', (oldMember, newMember) => {
     if (discordServerID == newMember.channelID) {
         commandHandler
@@ -52,8 +41,5 @@ client.on('voiceStateUpdate', (oldMember, newMember) => {
         Write a Json Stringify for each user in the channel, and when they leave and join.
         */
     }
-    console.log(discordServerID)
-    console.log(oldMember.channelID)
-    console.log("State: " + newMember.channelID)
 })
 

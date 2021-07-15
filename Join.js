@@ -1,6 +1,5 @@
 
 const fetch = require('node-fetch')
-var mysql = require('mysql');
 require('dotenv').config();
 var fs = require('fs');
 require("./Stream/jquery-3.6.0");
@@ -12,197 +11,89 @@ class Details {
 }
 
 class User {
-    constructor(id, state) {
+    constructor(id, state, name) {
         this.identity = id
         this.speaking = state
         this.images = []
+        this.name = name
     }
 
 }
 
 module.exports = async function (msg, tokens, client) {
     if (msg.content == "!joincall") {
-    //console.log(msg.guild.channels)
-    //console.log(msg.guild.channels.cache)
-    //console.log(msg.member.voice.channel);
-    const channel = msg.member.voice.channel;
-    let jsonToUpdate = {}
-    let user = {}, details = [];
+        //If the Member is in a voice call.
+        if (msg.member.voice.channel) {
+            const channel = msg.member.voice.channel;
+            let details = [];
+            let channelUsers = [];
 
-    channel.members.forEach(userInChannel => {
-        //let userToAssign = `${userInChannel.id}:{"speaking":"0"}`
-        //Object.assign(jsonToUpdate, userToAssign)
-        console.log("current User: " + userInChannel.id)
-    details.push(new User(userInChannel.id, 0));  
-    })
-    console.log(details)
-    await fs.writeFile('./Stream/Users.json', JSON.stringify(details), function (err) {
-        if (err) throw err;
+            //Make Each User an object for The JSON to parse into index.html
+            channel.members.forEach(userInChannel => {
+                if (!userInChannel.user.bot) {
+                    details.push(new User(userInChannel.id, 0, userInChannel.user.username + userInChannel.user.discriminator));
+                    channelUsers.push(" " + userInChannel.user.username + " ")
+                }
+            })
+            console.log("Currently I see: " + channelUsers)
 
-        console.log('Replaced!');
-    });
+            //Make/Overwrite the json with the current Users in Chat, only User objects. 
+            await fs.writeFile('./Stream/Users.json', JSON.stringify(details), function (err) {
+                if (err) throw err;
+            });
 
 
-    channel.join()
-        .then(connection => {
-            console.log('Connected!')
-            connection.on('speaking', async (user, speakingState) => {
-                let json = require('./Stream/Users.json');
-                console.log(json)
-                    json.forEach(jsonUser => {
+            channel.join()
+                .then(connection => {
 
-                        mkdirp(`./Stream/${jsonUser.identity}`, function(err) { 
-                            console.log("Making Folder")
-                            // path exists unless there was an error
-                        
-                                    });
+                    //After Connecting, if anyone is speaking, it returns the User speaking, and what state it is in.
+                    connection.on('speaking', async (user, speakingState) => {
+                        let json = require('./Stream/Users.json');
+                        json.forEach(jsonUser => {
 
-                        console.log(jsonUser) 
-                        if (jsonUser.identity == user.id) {
-                            console.log("is Talking: " + user.id)
-                            console.log(speakingState.bitfield)
-                            jsonUser.speaking = speakingState.bitfield
-                        }
+                            //If a folder with the Name of the User isn't made, make one. This is where we'll take pictures from.
+                            mkdirp(`./UserImages/${jsonUser.name}`, function (err) {
+                                // path exists unless there was an error
 
-                        let testFolder = `./Stream/${jsonUser.identity}`;
+                            });
 
-                        fs.readdir(testFolder, (err, files) => {
-                            console.log(files)
-                            if (files != 0) {
-                                jsonUser.images = files
-                                files.forEach(file => {
-                                    //jsonUser.images.push[file]
-                                console.log(file);
-                                console.log("Files")
-                                console.log(jsonUser.images)
-                                });
-                            } else {
-                                console.log("no files")
+                            //Change the Users Speaking State in the JSON
+                            if (jsonUser.identity == user.id) {
+                                jsonUser.speaking = speakingState.bitfield
                             }
-                          });
-                        
 
-                    })
+                            let defaultNoImage = `./Stream/img`
+                            let userFolder = `./UserImages/${jsonUser.name}`;
 
-                        
+                            fs.readdir(userFolder, (err, files) => {
+                                if (files != 0) {
+                                    jsonUser.images = files
+                                } else {
+                                    fs.readdir(defaultNoImage, (err, backupFiles) => {
+                                        if (backupFiles != 0) {
+                                            jsonUser.images = backupFiles
+                                        } else {
+                                            console.log("No files found in img. Problem! Please re-install the package.")
+                                        }
+                                    })
+                                    console.log("No files found in " + jsonUser.name + "'s folder")
+                                }
+                            });
 
+
+                        })
+
+
+                        //Overwrite/Update the json with the new information, only User objects. 
                         await fs.writeFile('Stream/Users.json', JSON.stringify(json), function (err) {
                             if (err) throw err;
-                    
-                            console.log('Replaced!');
                         });
-
-
-                console.log()
-                console.log()
-                console.log()
-                //console.log(json.User.id[user.id])
-                console.log()
-                console.log()
-                console.log()
-                /*
-                await fs.writeFile('test.json', JSON.stringify(eachUserSettings), function (err) {
-                    if (err) throw err;
-
-                    console.log('Replaced!');
-                });
-                /*
-
-                /*
-                let text = require('./Stream/call.json');
-                console.log(text)
-                console.log("UNDER THIS")
-                console.log(user.id)
-                //text[`${user.id}`].speaking = 5;
-
-                console.log()
-                //console.log(user)
-                if (speakingState == 0) {
-                    text[`${user.id}`].speaking = '1';
-                } else if (speakingState == 1) {
-                    text[`${user.id}`].speaking = '0';
-                }
-                console.log(speakingState)
-                //console.log(JSON.stringify(text))
-                await fs.writeFile('Stream/call.json', JSON.stringify(text), function (err) {
-                    if (err) throw err;
-
-                    console.log('Replaced!');
-                });
-
-                //console.log(channel.speaking)
-                console.log(test)
-                console.log(user)
-                */
-            })
-        })
-        .catch(console.error);
-
-    function checkState() {
-        console.log(channel.speaking)
-    }
-
-    /*
-    var voiceChannels = [];
-    var testServer = msg.guild.channels.cache
-    testServer.forEach(element => {
-        console.log(element)
-        if (element.type == "voice") {
-            voiceChannels.push(element);
+                    })
+                })
+                .catch(console.error);
+        } else {
+            msg.reply("You Are not in a Voice Channel");
+            console.log("User not in Voice Channel")
         }
-    })
-    voiceChannels.forEach(channel => {
-        if (channel.guild.voiceStates == msg.author.id)
-        voiceChannel.join(channel.id)
-        .then(connection => {
-
-        })
-    })
-    console.log(voiceChannels)
-    console.log("THIAS IS THE SPLIUT")
-    console.log(voiceChannels)
-    */
-
-    //console.log(voiceChannels[0].guild.voiceStates)
-    /*
-    voiceChannel.join()
-    .then(connection => {
-
-    });
-    */
-}
-/*
-Get User that sent the Message.
-Join the Chat they are in.
-Listen to the Users talk.
-If they talk over 1 second, turn a number in DB to 2.
-If they don't talk for 2 seconds, turn number to 1.
-If they don't talk for 3 seconds, turn number to 0.
-
-Database:
-Array {
-    Person{
-        Id of speaker: Nickname,
-        Current Talk Number: 0
-   }
-    Person{
-        Id of speaker: Nickname,
-        Current Talk Number: 0
-   }
-
-}
-
-Code:
-If (Person.Current-Talk-Number == 0) {
-    Image = (No Image)
-} else if (Person.Current-Talk-Number == 1) {
-    Image = `/ImageFolder/${Person.Id}Dark.png(maybe Gif??)`
-} else if (Person.Current-Talk-Number == 2) {
-    Image = `/ImageFolder/${Person.Id}.png(maybe Gif??)`
-}
-*/
-}
-
-function bah() {
-    console.log("BAAAAAAAAH")
+    }
 }
